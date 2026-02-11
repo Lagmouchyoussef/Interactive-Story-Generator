@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Story Generator</title>
+    <style>
+        /* --------- SIMPLE RESET --------- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #ffe9f3, #f2f7ff 40%, #e5f9ff);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* --------- MAIN CONTAINER --------- */
+        .app-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 700px;
+            padding: 24px 28px 30px;
+            border-radius: 18px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255, 182, 193, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-container::before {
+            content: "✦";
+            position: absolute;
+            font-size: 60px;
+            color: rgba(255, 204, 230, 0.5);
+            top: -20px;
+            right: 20px;
+            transform: rotate(10deg);
+        }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .app-header h1 {
+            font-size: 1.9rem;
+            color: #333;
+        }
+
+        .app-header p {
+            margin-top: 6px;
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        /* --------- FORM --------- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 18px;
+            margin-top: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.9rem;
+        }
+
+        .form-group label {
+            color: #444;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid #d8d8ff;
+            outline: none;
+            font-size: 0.9rem;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.08s;
+            background: #fafaff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #ff7ab5;
+            box-shadow: 0 0 0 2px rgba(255, 122, 181, 0.25);
+            transform: translateY(-1px);
+            background: #ffffff;
+        }
+
+        .form-group input::placeholder {
+            color: #b3b3d1;
+        }
+
+        /* --------- BUTTONS --------- */
+        .buttons-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+            justify-content: center;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 9px 18px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.1s, box-shadow 0.15s, background 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff7ab5, #ffb86c);
+            color: #fff;
+            box-shadow: 0 8px 18px rgba(255, 122, 181, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f2f2ff;
+            color: #555;
+            border: 1px solid #d7d7ff;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        /* --------- STORY SECTION --------- */
+        .story-section {
+            margin-top: 22px;
+            padding-top: 16px;
+            border-top: 1px dashed #ffd1e3;
+        }
+
+        .story-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.05rem;
+            color: #444;
+            margin-bottom: 8px;
+        }
+
+        .story-title span {
+            font-size: 1.2rem;
+        }
+
+        .story-box {
+            min-height: 70px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: #fff7fc;
+            border: 1px solid #ffd3ec;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-box.empty {
+            color: #b0849c;
+            font-style: italic;
+        }
+
+        .story-box::before {
+            content: """;
+            position: absolute;
+            font-size: 40px;
+            color: rgba(255, 151, 195, 0.3);
+            top: -10px;
+            left: 10px;
+        }
+
+        .story-box::after {
+            content: """;
+            position: absolute;
+            font-size: 40px;
+            color: rgba(255, 151, 195, 0.3);
+            bottom: -20px;
+            right: 18px;
+        }
+
+        /* --------- RESPONSIVE --------- */
+        @media (max-width: 600px) {
+            .app-container {
+                padding: 18px 16px 22px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons-row {
+                justify-content: stretch;
+            }
+
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header class="app-header">
+        <h1>Story Generator</h1>
+        <p>Fill in the fields, choose a style... and let the magic happen!</p>
+    </header>
+
+    <!-- FORM -->
+    <section class="form-section">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="prenom">Hero / Heroine Name</label>
+                <input type="text" id="prenom" placeholder="Ex: Lina, Adam...">
+            </div>
+
+            <div class="form-group">
+                <label for="adjectif">Adjective</label>
+                <input type="text" id="adjectif" placeholder="Ex: brave, funny...">
+            </div>
+
+            <div class="form-group">
+                <label for="lieu">Place</label>
+                <input type="text" id="lieu" placeholder="Ex: at the park, at the beach...">
+            </div>
+
+            <div class="form-group">
+                <label for="activite">Activity</label>
+                <input type="text" id="activite" placeholder="Ex: play soccer, explore a cave...">
+            </div>
+
+            <div class="form-group">
+                <label for="style">Story Style</label>
+                <select id="style">
+                    <option value="drole">Funny</option>
+                    <option value="heroique">Heroic</option>
+                    <option value="mysterieuse">Mysterious</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="buttons-row">
+            <button id="btn-generer" class="btn btn-primary">
+                 Generate Story
+            </button>
+            <button id="btn-effacer" class="btn btn-secondary">
+                 Clear
+            </button>
+        </div>
+    </section>
+
+    <!-- STORY -->
+    <section class="story-section">
+        <div class="story-title">
+            <h2>Your Story:</h2>
+        </div>
+        <div id="histoire" class="story-box empty">
+            No story yet... Start by filling out the form above.
+        </div>
+    </section>
+</div>
+
+<script src="script.js"></script>
+
+
+</body>
+</html>
