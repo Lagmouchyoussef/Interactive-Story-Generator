@@ -1,4 +1,11 @@
-# Set default language to JavaScript for GitHub language detection
-*.html linguist-detectable=false
-*.css linguist-detectable=false
+# Force JavaScript as main language on GitHub
+# Hide HTML from language statistics
+*.html linguist-vendored
+*.html linguist-language=JavaScript
+
+# Hide CSS from language statistics  
+*.css linguist-vendored
+*.css linguist-language=JavaScript
+
+# Ensure JavaScript is detected
 *.js linguist-detectable=true
